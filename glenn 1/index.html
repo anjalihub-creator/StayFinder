@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayFinder - Find Your Perfect Stay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff5722;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            flex: 1;
+            max-width: 400px;
+            margin: 0 40px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            flex: 1;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .search-bar button {
+            background: #ff5722;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: #e64a19;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #ff5722;
+        }
+
+        .btn {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #e64a19;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #ff5722;
+            border: 2px solid #ff5722;
+        }
+
+        .btn-outline:hover {
+            background: #ff5722;
+            color: white;
+        }
+
+        /* Main Content */
+        .main {
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        /* Filters */
+        .filters {
+            background: white;
+            padding: 30px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filters-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #ff5722;
+        }
+
+        /* Property Grid */
+        .properties {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .properties h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .property-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .property-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+        }
+
+        .property-price {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            color: #ff5722;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .property-details {
+            padding: 20px;
+        }
+
+        .property-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .property-location {
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .property-features {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ff5722;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff5722;
+        }
+
+        /* Property Detail Page */
+        .property-detail {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: none;
+        }
+
+        .property-header {
+            margin-bottom: 30px;
+        }
+
+        .property-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .property-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: 300px 300px;
+            gap: 10px;
+            margin-bottom: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .gallery-main {
+            grid-row: span 2;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .gallery-thumb {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .property-info {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .property-description h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .amenities {
+            margin: 30px 0;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .amenity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+
+        .booking-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .booking-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .guests-input {
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 0 15px;
+                flex-wrap: wrap;
+                height: auto;
+                min-height: 70px;
+            }
+
+            .search-bar {
+                order: 3;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .property-gallery {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(5, 200px);
+            }
+
+            .gallery-main {
+                grid-row: span 1;
+            }
+
+            .property-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo" onclick="showHomePage()">
+                <i class="fas fa-home"></i> StayFinder
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Where are you going?">
+                <button onclick="searchProperties()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="nav-links">
+                <a href="#" class="nav-link" onclick="showHostDashboard()">Become a Host</a>
+                <button class="btn btn-outline" onclick="showLoginModal()">Log In</button>
+                <button class="btn" onclick="showRegisterModal()">Sign Up</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Home Page -->
+        <div id="homePage">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Find Your Perfect Stay</h1>
+                <p>Discover amazing places to stay around the world</p>
+                <button class="btn" onclick="document.querySelector('.filters').scrollIntoView()">
+                    Start Exploring
+                </button>
+            </section>
+
+            <!-- Filters -->
+            <section class="filters">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" placeholder="Enter city or destination">
+                    </div>
+                    <div class="filter-group">
+                        <label for="checkIn">Check-in</label>
+                        <input type="date" id="checkIn">
+                    </div>
+                    <div class="filter-group">
+                        <label for="checkOut">Check-out</label>
+                        <input type="date" id="checkOut">
+                    </div>
+                    <div class="filter-group">
+                        <label for="guests">Guests</label>
+                        <select id="guests">
+                            <option value="1">1 Guest</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5">5+ Guests</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn" onclick="filterProperties()">Search</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Properties Grid -->
+            <section class="properties">
+                <h2>Featured Properties</h2>
+                <div id="propertyGrid" class="property-grid">
+                    <!-- Properties will be loaded here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Property Detail Page -->
+        <div id="propertyDetail" class="property-detail">
+            <!-- Property details will be loaded here -->
+        </div>
+
+        <!-- Host Dashboard -->
+        <div id="hostDashboard" class="property-detail hidden">
+            <h1>Host Dashboard</h1>
+            <div style="margin: 40px 0;">
+                <button class="btn" onclick="showAddListingForm()">Add New Listing</button>
+            </div>
+            <div id="hostListings">
+                <!-- Host listings will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            <h2>Log In to StayFinder</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Log In</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? 
+                <a href="#" onclick="closeModal('loginModal'); showRegisterModal();" style="color: #ff5722;">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            <h2>Join StayFinder</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Phone Number</label>
+                    <input type="tel" id="registerPhone" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Sign Up</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Already have an account? 
+                <a href="#" onclick="closeModal('registerModal'); showLoginModal();" style="color: #ff5722;">Log in</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
+            <h2>Confirm Your Booking</h2>
+            <div id="bookingDetails">
+                <!-- Booking details will be loaded here -->
+            </div>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="bookingCheckIn">Check-in Date</label>
+                    <input type="date" id="bookingCheckIn" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingCheckOut">Check-out Date</label>
+                    <input type="date" id="bookingCheckOut" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingGuests">Number of Guests</label>
+                    <select id="bookingGuests" required>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5+ Guests</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="totalPrice">Total Price</label>
+                    <input type="text" id="totalPrice" readonly>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let properties = [];
+        let currentProperty = null;
+
+        
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+             const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+        currentUser = { token: savedToken };
+        updateNavigation(); // Optional: update nav to reflect login state
+    }
+            loadProperties();
+            setupEventListeners();
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkIn').min = today;
+            document.getElementById('checkOut').min = today;
+            document.getElementById('bookingCheckIn').min = today;
+            document.getElementById('bookingCheckOut').min = today;
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Register form
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            
+            // Booking form
+            document.getElementById('bookingForm').addEventListener('submit', handleBooking);
+            
+            // Check-in date change
+            document.getElementById('checkIn').addEventListener('change', function() {
+                document.getElementById('checkOut').min = this.value;
+            });
+            
+            // Booking check-in date change
+            document.getElementById('bookingCheckIn').addEventListener('change', function() {
+                document.getElementById('bookingCheckOut').min = this.value;
+                calculateTotalPrice();
+            });
+            
+            // Booking check-out date change
+            document.getElementById('bookingCheckOut').addEventListener('change', calculateTotalPrice);
+            
+            // Booking guests change
+            document.getElementById('bookingGuests').addEventListener('change', calculateTotalPrice);
+        }
+
+        // API Functions
+
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(currentUser && { 'Authorization': `Bearer ${currentUser.token}` })
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        // Load properties from API
+        async function loadProperties() {
+            try {
+                showLoading('propertyGrid');
+                const data = await apiCall('/listings');
+                properties = data.listings || generateSampleData();
+                displayProperties(properties);
+            } catch (error) {
+                console.error('Error loading properties:', error);
+                // Fallback to sample data
+                properties = generateSampleData();
+                displayProperties(properties);
+            }
+        }
+
+        // Generate sample data for demo
+        function generateSampleData() {
+            return [
+                {
+                    id: 1,
+                    title: "Luxury Beachfront Villa",
+                    location: "Malibu, California",
+                    price: 450,
+                    rating: 4.9,
+                    bedrooms: 4,
+                    bathrooms: 3,
+                    guests: 8,
+                    image: "https://images.unsplash.com/photo-1502780402662-acc01917286e?w=400",
+                    images: [
+                        "https://images.unsplash.com/photo-1502780402662-acc01917286e?w=600",
+                        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=300",
+                        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=300",
+                        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=300"
+                    ],
+                    description: "Stunning oceanfront villa with panoramic views of the Pacific Ocean. Perfect for a luxury getaway with family and friends.",
+                    amenities: ["WiFi", "Pool", "Kitchen", "Parking", "Beach Access", "Air Conditioning"]
+                },
+                {
+                    id: 2,
+                    title: "Cozy Mountain Cabin",
+                    location: "Aspen, Colorado",
+                    price: 280,
+                    rating: 4.7,
+                    bedrooms: 3,
+                    bathrooms: 2,
+                    guests: 6,
+                    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400",
+                    images: [
+                        "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600",
+                        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300",
+                        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=300",
+                        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300"
+                    ],
+                    description: "Charming log cabin nestled in the Rocky Mountains. Ideal for skiing in winter and hiking in summer.",
+                    amenities: ["WiFi", "Fireplace", "Kitchen", "Parking", "Mountain Views", "Heating"]
+                },
+                {
+                    id: 3,
+                    title: "Modern City Apartment",
+                    location: "New York, NY",
+                    price: 320,
+                    rating: 4.8,
+                    bedrooms: 2,
+                    bathrooms: 2,
+                    guests: 4,
+                    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400",
+                    images: [
+                        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600",
+                        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=300",
+                        "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=300",
+                        "https://images.unsplash.com/photo-1560184897-ae75f418493e?w=300"
+                    ],
+                    description: "Sleek and modern apartment in the heart of Manhattan. Walking distance to Times Square and Central Park.",
+                    amenities: ["WiFi", "Kitchen", "Gym", "Doorman", "City Views", "Air Conditioning"]
+                },
+                {
+                    id: 4,
+                    title: "Charming Countryside Cottage",
+                    location: "Tuscany, Italy",
+                    price: 200,
+                    rating: 4.6,
+                    bedrooms: 2,
+                    bathrooms: 1,
+                    guests: 4,
+                    image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400",
+                    images: [
+                        "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600",
+                        "https://images.unsplash.com/photo-1504597833195-bc532e0abaad?w=300",
+                        "https://images.unsplash.com/photo-1605276373954-0c4a0dac5851?w=300",
+                        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300"
+                    ],
+                    description: "Authentic Tuscan farmhouse surrounded by vineyards and olive groves. Experience the true Italian countryside.",
+                    amenities: ["WiFi", "Kitchen", "Garden", "Vineyard Views", "Fireplace", "Parking"]
+                }
+            ];
+        }
+
+        // Display properties in grid
+        function displayProperties(propertiesToShow) {
+            const grid = document.getElementById('propertyGrid');
+            
+            if (!propertiesToShow || propertiesToShow.length === 0) {
+                grid.innerHTML = '<p class="loading">No properties found.</p>';
+                return;
+            }
+            
+            grid.innerHTML = propertiesToShow.map(property => `
+                <div class="property-card" onclick="showPropertyDetail(${property.id})">
+                    <div class="property-image" style="background-image: url('${property.image}')">
+                        <div class="property-price">$${property.price}/night</div>
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-title">${property.title}</h3>
+                        <p class="property-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${property.location}
+                        </p>
+                        <div class="property-features">
+                            <span><i class="fas fa-bed"></i> ${property.bedrooms} beds</span>
+                            <span><i class="fas fa-bath"></i> ${property.bathrooms} baths</span>
+                            <span><i class="fas fa-users"></i> ${property.guests} guests</span>
+                        </div>
+                        <div class="property-rating">
+                            <i class="fas fa-star"></i>
+                            <span>${property.rating}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show property detail page
+        function showPropertyDetail(propertyId) {
+            currentProperty = properties.find(p => p.id === propertyId);
+            
+            if (!currentProperty) return;
+            
+            const detailPage = document.getElementById('propertyDetail');
+            const homePage = document.getElementById('homePage');
+            const hostDashboard = document.getElementById('hostDashboard');
+            
+            // Hide other pages
+            homePage.style.display = 'none';
+            hostDashboard.classList.add('hidden');
+            
+            // Show detail page
+            detailPage.style.display = 'block';
+            detailPage.innerHTML = `
+                <button class="btn btn-outline" onclick="showHomePage()" style="margin-bottom: 20px;">
+                    <i class="fas fa-arrow-left"></i> Back to Search
+                </button>
+                
+                <div class="property-header">
+                    <h1>${currentProperty.title}</h1>
+                    <p class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${currentProperty.location}
+                    </p>
+                    <div class="property-rating">
+                        <i class="fas fa-star"></i>
+                        <span>${currentProperty.rating} • Excellent location</span>
+                    </div>
+                </div>
+                
+                <div class="property-gallery">
+                    <div class="gallery-main" style="background-image: url('${currentProperty.images[0]}')"></div>
+                    <div class="gallery-thumb" style="background-image: url('${currentProperty.images[1]}')"></div>
+                    <div class="gallery-thumb" style="background-image: url('${currentProperty.images[2]}')"></div>
+                    <div class="gallery-thumb" style="background-image: url('${currentProperty.images[3]}')"></div>
+                    <div class="gallery-thumb" style="background-image: url('${currentProperty.images[1]}')"></div>
+                </div>
+                
+                <div class="property-info">
+                    <div class="property-description">
+                        <h3>About this place</h3>
+                        <p>${currentProperty.description}</p>
+                        
+                        <div class="property-features" style="margin: 20px 0;">
+                            <span><i class="fas fa-bed"></i> ${currentProperty.bedrooms} bedrooms</span>
+                            <span><i class="fas fa-bath"></i> ${currentProperty.bathrooms} bathrooms</span>
+                            <span><i class="fas fa-users"></i> Up to ${currentProperty.guests} guests</span>
+                        </div>
+                        
+                        <div class="amenities">
+                            <h3>Amenities</h3>
+                            <div class="amenities-grid">
+                                ${currentProperty.amenities.map(amenity => `
+                                    <div class="amenity">
+                                        <i class="fas fa-check"></i>
+                                        <span>${amenity}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-card">
+                        <div class="booking-price">
+                            ${currentProperty.price} <span style="font-size: 1rem; font-weight: normal;">per night</span>
+                        </div>
+                        
+                        <div class="date-inputs">
+                            <div>
+                                <label>Check-in</label>
+                                <input type="date" id="detailCheckIn">
+                            </div>
+                            <div>
+                                <label>Check-out</label>
+                                <input type="date" id="detailCheckOut">
+                            </div>
+                        </div>
+                        
+                        <div class="guests-input">
+                            <label>Guests</label>
+                            <select id="detailGuests">
+                                <option value="1">1 Guest</option>
+                                <option value="2">2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="5">5+ Guests</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn" onclick="initiateBooking()" style="width: 100%; margin-bottom: 15px;">
+                            Reserve Now
+                        </button>
+                        
+                        <p style="text-align: center; color: #666; font-size: 14px;">
+                            You won't be charged yet
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            // Set minimum dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('detailCheckIn').min = today;
+            document.getElementById('detailCheckOut').min = today;
+            
+            // Setup date change listener
+            document.getElementById('detailCheckIn').addEventListener('change', function() {
+                document.getElementById('detailCheckOut').min = this.value;
+            });
+        }
+
+        // Show home page
+        function showHomePage() {
+            const homePage = document.getElementById('homePage');
+            const detailPage = document.getElementById('propertyDetail');
+            const hostDashboard = document.getElementById('hostDashboard');
+            
+            homePage.style.display = 'block';
+            detailPage.style.display = 'none';
+            hostDashboard.classList.add('hidden');
+        }
+
+        // Show host dashboard
+        function showHostDashboard() {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            const homePage = document.getElementById('homePage');
+            const detailPage = document.getElementById('propertyDetail');
+            const hostDashboard = document.getElementById('hostDashboard');
+            
+            homePage.style.display = 'none';
+            detailPage.style.display = 'none';
+            hostDashboard.classList.remove('hidden');
+            
+            loadHostListings();
+        }
+
+        // Load host listings
+        function loadHostListings() {
+           
+            const hostListings = document.getElementById('hostListings');
+            hostListings.innerHTML = `
+                <div class="property-grid">
+                    <div class="property-card">
+                        <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1502780402662-acc01917286e?w=400')">
+                            <div class="property-price">$450/night</div>
+                        </div>
+                        <div class="property-details">
+                            <h3 class="property-title">My Luxury Villa</h3>
+                            <p class="property-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Malibu, California
+                            </p>
+                            <div style="margin-top: 15px;">
+                                <button class="btn btn-outline" style="margin-right: 10px;">Edit</button>
+                                <button class="btn">View Bookings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show add listing form
+        function showAddListingForm() {
+            alert('Add listing functionality would be implemented here with a comprehensive form for property details, images, pricing, etc.');
+        }
+
+        // Search properties
+        function searchProperties() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredProperties = properties.filter(property => 
+                property.title.toLowerCase().includes(searchTerm) ||
+                property.location.toLowerCase().includes(searchTerm)
+            );
+            displayProperties(filteredProperties);
+        }
+
+        // Filter properties
+        function filterProperties() {
+            const location = document.getElementById('location').value.toLowerCase();
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            const guests = parseInt(document.getElementById('guests').value);
+            
+            let filteredProperties = properties;
+            
+            if (location) {
+                filteredProperties = filteredProperties.filter(property => 
+                    property.location.toLowerCase().includes(location)
+                );
+            }
+            
+            if (guests) {
+                filteredProperties = filteredProperties.filter(property => 
+                    property.guests >= guests
+                );
+            }
+            
+            displayProperties(filteredProperties);
+            
+            // Scroll to results
+            document.querySelector('.properties').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Modal functions
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function showRegisterModal() {
+            document.getElementById('registerModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const data = await apiCall('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+                
+                currentUser = data.user;
+                currentUser.token = data.token;
+                localStorage.setItem("token", data.token);
+
+                closeModal('loginModal');
+                showSuccess('Login successful!');
+                updateNavigation();
+                
+            } catch (error) {
+                showError('Login failed. Please check your credentials.');
+            }
+        }
+
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const phone = document.getElementById('registerPhone').value;
+            
+            try {
+                const data = await apiCall('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, email, password, phone })
+                });
+                
+                currentUser = data.user;
+                currentUser.token = data.token;
+                localStorage.setItem("token", data.token);
+
+                closeModal('registerModal');
+                showSuccess('Registration successful! Welcome to StrayFinder!');
+                updateNavigation();
+                
+            } catch (error) {
+                showError('Registration failed. Please try again.');
+            }
+        }
+
+        // Initiate booking
+        function initiateBooking() {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            const checkIn = document.getElementById('detailCheckIn').value;
+            const checkOut = document.getElementById('detailCheckOut').value;
+            const guests = document.getElementById('detailGuests').value;
+            
+            if (!checkIn || !checkOut) {
+                showError('Please select check-in and check-out dates.');
+                return;
+            }
+            
+            // Pre-fill booking modal
+            document.getElementById('bookingCheckIn').value = checkIn;
+            document.getElementById('bookingCheckOut').value = checkOut;
+            document.getElementById('bookingGuests').value = guests;
+            
+            // Show booking details
+            document.getElementById('bookingDetails').innerHTML = `
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h3>${currentProperty.title}</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> ${currentProperty.location}</p>
+                    <p><strong>${currentProperty.price}</strong> per night</p>
+                </div>
+            `;
+            
+            calculateTotalPrice();
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        // Calculate total price
+        function calculateTotalPrice() {
+            const checkIn = document.getElementById('bookingCheckIn').value;
+            const checkOut = document.getElementById('bookingCheckOut').value;
+            
+            if (!checkIn || !checkOut || !currentProperty) return;
+            
+            const startDate = new Date(checkIn);
+            const endDate = new Date(checkOut);
+            const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            
+            if (nights > 0) {
+                const total = nights * currentProperty.price;
+                document.getElementById('totalPrice').value = `${total} (${nights} nights)`;
+            }
+        }
+
+        // Handle booking
+        async function handleBooking(e) {
+            e.preventDefault();
+            
+            const checkIn = document.getElementById('bookingCheckIn').value;
+            const checkOut = document.getElementById('bookingCheckOut').value;
+            const guests = document.getElementById('bookingGuests').value;
+            
+            try {
+                const data = await apiCall('/bookings', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        listingId: currentProperty.id,
+                        checkIn,
+                        checkOut,
+                        guests,
+                        totalPrice: document.getElementById('totalPrice').value
+                    })
+                });
+                
+                closeModal('bookingModal');
+                showSuccess('Booking confirmed! You will receive a confirmation email shortly.');
+                
+            } catch (error) {
+                showError('Booking failed. Please try again.');
+            }
+        }
+
+        // Update navigation based on login status
+        function updateNavigation() {
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (currentUser) {
+                navLinks.innerHTML = `
+                    <a href="#" class="nav-link" onclick="showHostDashboard()">Host Dashboard</a>
+                    <a href="#" class="nav-link">My Bookings</a>
+                    <span class="nav-link">Welcome, ${currentUser.name}!</span>
+                    <button class="btn" onclick="logout()">Logout</button>
+                `;
+            }
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            showHomePage();
+            
+            // Reset navigation
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.innerHTML = `
+                <a href="#" class="nav-link" onclick="showHostDashboard()">Become a Host</a>
+                <button class="btn btn-outline" onclick="showLoginModal()">Log In</button>
+                <button class="btn" onclick="showRegisterModal()">Sign Up</button>
+            `;
+            
+            showSuccess('Logged out successfully!');
+        }
+
+        // Utility functions
+        function showLoading(elementId) {
+            document.getElementById(elementId).innerHTML = '<p class="loading">Loading...</p>';
+        }
+
+        function showError(message) {
+            // Remove existing alerts
+            const existingAlerts = document.querySelectorAll('.error, .success');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            const alert = document.createElement('div');
+            alert.className = 'error';
+            alert.textContent = message;
+            document.body.insertBefore(alert, document.body.firstChild);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            // Remove existing alerts
+            const existingAlerts = document.querySelectorAll('.error, .success');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            const alert = document.createElement('div');
+            alert.className = 'success';
+            alert.textContent = message;
+            document.body.insertBefore(alert, document.body.firstChild);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Handle escape key to close modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+        fetch('http://localhost:3000/api/data') 
+        .then(response => response.json()) 
+        .then(data => console.log("API Data:", data)) 
+        .catch(error => console.error("Error fetching API:", error));
+    </script>
+</body>
+</html>
