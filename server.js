@@ -6,8 +6,9 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = 'your-secret-key-change-in-production';
+const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
 
 // Middleware
 app.use(cors());
@@ -16,10 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // MySQL Database Connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Ashi2004*', // Change this to your MySQL password
-    database: 'stayfinder_db'
+host: process.env.DB_HOST ,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+database: process.env.DB_NAME 
+
 });
 console.log('Connection config:', db.config);
 
@@ -695,16 +697,19 @@ app.get('/api/host/bookings', authenticateToken, (req, res) => {
     });
 });
 
+
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-    res.status(404).json({ error: 'Route not found' });
+app.use(express.static(__dirname));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
+
 
 // Start server
 app.listen(PORT, () => {
