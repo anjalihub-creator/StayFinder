@@ -1,3 +1,4 @@
+const dot = require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -10,18 +11,24 @@ const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MySQL Database Connection
+console.log(' Runtime DB config:', {
+  DB_HOST: process.env.DB_HOST,
+  DB_PORT: process.env.DB_PORT,
+  DB_USER: process.env.DB_USER,
+});
 const db = mysql.createConnection({
 host: process.env.DB_HOST ,
 user: process.env.DB_USER,
 password: process.env.DB_PASSWORD,
-database: process.env.DB_NAME 
-
+database: process.env.DB_NAME,
+port: Number(process.env.DB_PORT)
 });
 console.log('Connection config:', db.config);
 
